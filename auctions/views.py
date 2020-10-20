@@ -10,10 +10,9 @@ from .models import User, auction_listing
 categories_types = ['Furniture', 'Fashion', 'Electronics',
                     'Home Appliances', 'Books', 'Other']
 
+
 # main page of the website on which all the active listings
 # will be shown
-
-
 def index(request):
     return render(request, "auctions/index.html", {
         # getting all the listing active or not from the DB
@@ -21,8 +20,6 @@ def index(request):
     })
 
 # page to create an auction listing
-
-
 def create_listing(request):
     ''' if the user had filled the form of creating a listing then do this '''
     if request.method == "POST":
@@ -129,18 +126,35 @@ def categories(request):
         })
 
 
+# When anyone will click on any listing which is on the home page  
+# then this function will take the user to that listing's info page
 def listing(request, listing_id):
+    # getting the listing on which the user had clicked
     listing = auction_listing.objects.filter(id=listing_id).get()
-    if request.method == "GET":
 
+    # Checking that by which method the user came to this place
+    if request.method == "GET":
+        # when user came by get method, i.e, by clicking on 
+        # a particular listing or filling the link to the search bar
         if listing:
+            # then we're checking that the listing exists and 
+            # if it exists then show that listing
             return render(request, "auctions/listing.html", {
                 "listing": listing
             })
         else:
+            # otherwise show an Error
             return HttpResponse("Listing not found")
+
+    # if the user came here by post method
+    # it is only possible if the user had clicked on the
+    # button of end listing
     else:
+        # then make that listing inactive
         listing.active = False
+
+        # update the listing's active status
         listing.save(update_fields=["active"])
 
+        # show the remaining active listings on index page
         return HttpResponseRedirect(reverse("index"))
