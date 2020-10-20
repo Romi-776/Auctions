@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>{{listing.title}}</h1>
+    {{listing.description}} <br>
+    <img src="{{listing.image_url}}"> <br>
+    Category: {{listing.category}} <br>
+    Created When: {{listing.added_when}} <br>
+    Created By: {{listing.created_by}}
+
+    {% if request.user.username == listing.created_by%}
+        <form action="{{listing.id}}" method="POST">
+            {% csrf_token %}
+            <input type="submit" name="false" value="End listing">    
+        </form>    
+    
+    {% endif %}
+
+{% endblock %}

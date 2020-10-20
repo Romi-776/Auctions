@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %} {% block body %} {% if POST %}
+<h1 id="top">{{choosen_category}}</h1><br>
+<ul>
+  {% for auction_listing in category_list %}
+  <li>
+    <a href="{{auction_listing.id}}" style="text-decoration: none;color: black;">
+    <div>
+      <h3>{{auction_listing.title}}</h3>
+      <img src="{{auction_listing.image_url}}" /><br />
+      Created: {{auction_listing.added_when}}
+    </div>
+    </a>
+  </li>
+  {% empty %}
+  <h3>No Active Listings Available</h3>
+  <br>
+  <a href="{% url 'categories' %}">Go back</a>
+  {% endfor %}
+</ul>
+{% else %}
+<h1>Choose Category</h1>
+<form action="{% url 'categories' %}" method="POST">
+  {% csrf_token %}
+  <select name="category">
+    {% for cat in categories %}
+    <option value="{{cat}}">{{cat}}</option>
+    {% endfor %}
+  </select>
+  <button>View</button>
+</form>
+{% endif %}
+
+{% endblock %}
+
+<link href="#top">Go to top</link>

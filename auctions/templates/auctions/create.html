@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Enter Product Details</h2>
+    <form action="{% url 'create_listing' %}", method="POST">
+        {% csrf_token %}
+        Title: <input type="text" name="title"><br>
+        Description:<textarea name="description" cols="30" placeholder="Enter Details of your product..." rows="1"></textarea><br>
+        Image Url: <input type="text" name="image_url">
+        Category: <select name="category">
+            {% for cat in categories%}
+                <option value="{{cat}}">{{cat}}</option>
+            {% endfor %}
+        </select>
+        <button>Submit</button>
+    </form>
+{% endblock %}
