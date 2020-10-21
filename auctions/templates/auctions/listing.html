@@ -8,7 +8,7 @@
     Created When: {{listing.added_when}} <br>
     Created By: {{listing.created_by}}
 
-    {% if request.user.username == listing.created_by%}
+    {% if request.user.username == listing.created_by and listing.active %}
         <form action="{{listing.id}}" method="POST">
             {% csrf_token %}
             <input type="submit" name="false" value="End listing">    

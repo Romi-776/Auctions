@@ -1,6 +1,6 @@
-1. Make a button to deactivate an active listing
-    only the person who created this listing will access this
-    (Done)
+1. Show all the listing in active as well as all listing page according to time added
+    i.e, newly created listing should be on top of the page.
+
 
 2. Add watchlist feature
 

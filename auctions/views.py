@@ -161,6 +161,7 @@ def listing(request, listing_id):
 
 def all_listings(request):
     listings = auction_listing.objects.all()
+    listings.reverse()
 
     return render(request, "auctions/all_listings.html",{
         "listings": listings
