@@ -158,3 +158,10 @@ def listing(request, listing_id):
 
         # show the remaining active listings on index page
         return HttpResponseRedirect(reverse("index"))
+
+def all_listings(request):
+    listings = auction_listing.objects.all()
+
+    return render(request, "auctions/all_listings.html",{
+        "listings": listings
+    })

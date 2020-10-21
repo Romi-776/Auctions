@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<ul>
+    {% for listing in listings %}
+        <li>
+            <a href="{{listing.id}}" style="text-decoration: none;color: black;"><div>
+                <h3>{{listing.title}}</h3>
+                <img src="{{listing.image_url}}" /><br />
+                Created: {{listing.added_when}}
+              </div></a>
+        </li>
+    {% empty %}
+        <h3>No Listing Available</h3>
+    {% endfor %}       
+</ul>
+{% endblock %}
