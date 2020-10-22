@@ -15,11 +15,13 @@ categories_types = ['Furniture', 'Fashion', 'Electronics',
 # will be shown
 def index(request):
     return render(request, "auctions/index.html", {
-        # getting all the listing active or not from the DB
-        "listings": auction_listing.objects.filter(active=True)
+        # getting all the active listing from the DB in according to recent listing order
+        "listings": auction_listing.objects.filter(active=True).order_by('added_when').reverse()
     })
 
 # page to create an auction listing
+
+
 def create_listing(request):
     ''' if the user had filled the form of creating a listing then do this '''
     if request.method == "POST":
@@ -126,7 +128,7 @@ def categories(request):
         })
 
 
-# When anyone will click on any listing which is on the home page  
+# When anyone will click on any listing which is on the home page
 # then this function will take the user to that listing's info page
 def listing(request, listing_id):
     # getting the listing on which the user had clicked
@@ -134,10 +136,10 @@ def listing(request, listing_id):
 
     # Checking that by which method the user came to this place
     if request.method == "GET":
-        # when user came by get method, i.e, by clicking on 
+        # when user came by get method, i.e, by clicking on
         # a particular listing or filling the link to the search bar
         if listing:
-            # then we're checking that the listing exists and 
+            # then we're checking that the listing exists and
             # if it exists then show that listing
             return render(request, "auctions/listing.html", {
                 "listing": listing
@@ -159,10 +161,32 @@ def listing(request, listing_id):
         # show the remaining active listings on index page
         return HttpResponseRedirect(reverse("index"))
 
-def all_listings(request):
-    listings = auction_listing.objects.all()
-    listings.reverse()
 
-    return render(request, "auctions/all_listings.html",{
+def all_listings(request):
+    # getting all the listings sorted according to recent data
+    listings = auction_listing.objects.order_by('added_when').reverse()
+
+    return render(request, "auctions/all_listings.html", {
         "listings": listings
     })
+
+
+def watchlist(request):
+    if request.method == 'POST':
+        username = request.user.username
+        listing_name = request.POST['listing'].data.listing_name
+
+        listing_obj = auction_listing.objects.filter(title=listing_name)
+        user = User.objects.filter(username=username)
+
+        user.watchlist = listing_obj
+        user.save(updated_fields=['watchlist'])
+
+        return render(request, "auctions/listing.html", {
+            "listing": listing_obj, 
+            
+        })
+    else:
+        return render(request, 'auctions/watchlist.html', {
+            "watchlist": auction_listing.objects.filter(user=request.user.username)
+        })

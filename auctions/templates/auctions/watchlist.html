@@ -1,0 +1,17 @@
+{% extends 'auctions/layout.hmtl' %}
+
+{% block body %}
+    <ul>
+        {% for listing in watchlist %}
+            <li>
+                <a href="{{listing.id}}" style="text-decoration: none;color: black;"><div>
+                    <h3>{{listing.title}}</h3>
+                    <img src="{{listing.image_url}}" /><br />
+                    Created: {{listing.added_when}}
+                </div></a>
+            </li>
+        {% empty %}
+            <h3>No Listing in Watchlist</h3>
+        {% endfor %}
+    </ul>
+{% endbody %}

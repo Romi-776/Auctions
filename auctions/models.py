@@ -2,10 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class User(AbstractUser):
-    pass
-
-
 class auction_listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
@@ -17,6 +13,13 @@ class auction_listing(models.Model):
 
     def __str__(self):
         return f"{self.id}: Product - {self.title}"
+
+
+class User(AbstractUser):
+    watchlist = models.ManyToManyField(auction_listing, related_name='user')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class bid(models.Model):

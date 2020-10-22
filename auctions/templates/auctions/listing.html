@@ -13,7 +13,13 @@
             {% csrf_token %}
             <input type="submit" name="false" value="End listing">    
         </form>    
-    
+    {% endif %}
+
+    {% if user.is_authenticated and listing.active %}
+    <form action="url 'wathclist' " method="POST">
+        {% csrf_token %}
+        <input type="submit" name="listing" value="Add to Watchlist" data-listing_name="{{listing.title}}">    
+    </form>
     {% endif %}
 
 {% endblock %}
