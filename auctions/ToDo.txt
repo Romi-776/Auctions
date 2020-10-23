@@ -1,16 +1,1 @@
-Add watchlist feature
-    On any listing page, if any user is logged in 
-    he/she can see a button 'Add to watchlist'
-    When the user clicks on that button (post request is sent) 
-    then that listing will be added to the watchlist of that 
-    user and a message will be shown to that user at the same page 
-    only at that time
-
-    When the user go on his watchlist page then he/she can see all the listings
-    that are present in its watchlist and it will be sorted according to date.
-
-watchlist feature completed
-    Just add a message in the post part of it
-    and display it on listing
-
-Then Test it.
+Implemented the watchlist feature ^-^

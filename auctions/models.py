@@ -16,7 +16,7 @@ class auction_listing(models.Model):
 
 
 class User(AbstractUser):
-    watchlist = models.ManyToManyField(auction_listing, related_name='user')
+    watchlist = models.ManyToManyField(auction_listing, related_name='owner')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

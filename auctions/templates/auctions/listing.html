@@ -1,6 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if message %}
+    <div class="alert alert-success">
+        <strong>Success! </strong> {{message}}.
+      </div>
+    {% endif %}
+
     <h1>{{listing.title}}</h1>
     {{listing.description}} <br>
     <img src="{{listing.image_url}}"> <br>
@@ -16,9 +22,9 @@
     {% endif %}
 
     {% if user.is_authenticated and listing.active %}
-    <form action="url 'wathclist' " method="POST">
+    <form action="watchlist" method="POST">
         {% csrf_token %}
-        <input type="submit" name="listing" value="Add to Watchlist" data-listing_name="{{listing.title}}">    
+            <button name="listing" value="{{listing.id}}">Add to watchlist</button> 
     </form>
     {% endif %}
 

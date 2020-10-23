@@ -173,20 +173,18 @@ def all_listings(request):
 
 def watchlist(request):
     if request.method == 'POST':
-        username = request.user.username
-        listing_name = request.POST['listing'].data.listing_name
+        listing_id = request.POST['listing']
 
-        listing_obj = auction_listing.objects.filter(title=listing_name)
-        user = User.objects.filter(username=username)
-
-        user.watchlist = listing_obj
-        user.save(updated_fields=['watchlist'])
+        listing_obj = auction_listing.objects.get(id=listing_id)
+        
+        request.user.watchlist.add(listing_obj)
 
         return render(request, "auctions/listing.html", {
             "listing": listing_obj, 
-            
+            "message": "Listing added to Watchlist",
         })
     else:
+        
         return render(request, 'auctions/watchlist.html', {
-            "watchlist": auction_listing.objects.filter(user=request.user.username)
+            "watchlist": request.user.watchlist.all().
         })
