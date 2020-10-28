@@ -21,11 +21,17 @@
         </form>    
     {% endif %}
 
-    {% if user.is_authenticated and listing.active %}
+    {% if listing not in request.user.watchlist.all %}
     <form action="watchlist" method="POST">
         {% csrf_token %}
             <button name="listing" value="{{listing.id}}">Add to watchlist</button> 
     </form>
+    {% elif listing in request.user.watchlist.all %}
+    <form action="remove" method="POST">
+        {% csrf_token %}
+            <button name="listing" value="{{listing.id}}">Remove from watchlist</button> 
+    </form>
     {% endif %}
+
 
 {% endblock %}
