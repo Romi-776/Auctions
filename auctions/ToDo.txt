@@ -1,5 +1,1 @@
-Implemented the Add to watchlist and see all watchlist feature ^-^
-
-Implemented Remove from watchlist feature ^_^
-
 Implement the comments feature.

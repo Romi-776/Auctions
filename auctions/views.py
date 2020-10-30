@@ -197,3 +197,16 @@ def remove(request):
             "listing": listing_obj,
             "message": "Listing removed from Watchlist",
         })
+'''
+def add_comment(request):
+    if request.method == "POST":
+        comment_des = request.POST["comment"]
+        comment_made_by = request.user.username()
+        comment_made_on = request.POST["listing"]
+
+        new_comment = comment(
+            who_added=comment_made_by, comment_description=comment_des, for_what=comment_made_on)
+        
+        new_comment.save()
+
+        return HttpResponseRedirect(reverse(comment_made_on))'''

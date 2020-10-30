@@ -25,6 +25,17 @@ class User(AbstractUser):
 class bid(models.Model):
     pass
 
-
 class comment(models.Model):
     pass
+'''
+    who_added = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="comment_owner")
+    when_added = models.DateTimeField(auto_now_add=True)
+    comment_descritption = models.TextField(
+        max_length=2500)
+    for_what = models.ForeignKey(
+        auction_listing, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.who_added}: {self.comment_descritption}"
+'''
