@@ -170,43 +170,47 @@ def all_listings(request):
         "listings": listings
     })
 
-
+# adding a listing to a user's watchlist or
+# seeing all the watchlisted items of that user
 def watchlist(request):
+    # when the user clicks on add to watchlist button
     if request.method == 'POST':
+        # then get the listing_id
         listing_id = request.POST['listing']
+
+        # get the listing with that listing_id
         listing_obj = auction_listing.objects.get(id=listing_id)
+        
+        # add that listing to the watchlist of currently logged in user
         request.user.watchlist.add(listing_obj)
 
+        # return the same page of that listing with a success message
         return render(request, "auctions/listing.html", {
-            "listing": listing_obj,
+            "listing": listing_obj, 
             "message": "Listing added to Watchlist",
         })
+    # when the user clicks on watchlist button to see all
+    # its watchlisted items
     else:
-
+        # then return the list of all its watchlisted items
         return render(request, 'auctions/watchlist.html', {
             "watchlist": request.user.watchlist.all(),
         })
 
+# remove an item from a particular user's watchlisted items.
 def remove(request):
+    # when user clicks on Remove from watchlist button
     if request.method == "POST":
+        # get that listing's id
         listing_id = request.POST['listing']
+        # get that listing with the previous id
         listing_obj = auction_listing.objects.get(id=listing_id)
+
+        # remove that listing from the watchlist of the currently logged in user 
         request.user.watchlist.remove(listing_obj)
 
+        # return the same listing page with a success message
         return render(request, "auctions/listing.html", {
             "listing": listing_obj,
             "message": "Listing removed from Watchlist",
         })
-'''
-def add_comment(request):
-    if request.method == "POST":
-        comment_des = request.POST["comment"]
-        comment_made_by = request.user.username()
-        comment_made_on = request.POST["listing"]
-
-        new_comment = comment(
-            who_added=comment_made_by, comment_description=comment_des, for_what=comment_made_on)
-        
-        new_comment.save()
-
-        return HttpResponseRedirect(reverse(comment_made_on))'''

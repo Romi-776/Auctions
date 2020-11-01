@@ -13,5 +13,4 @@ urlpatterns = [
     path("all_listings", views.all_listings, name="all_listings"),
     path("watchlist", views.watchlist, name="watchlist"),
     path("remove", views.remove, name="remove"),
-    #path("add_comment", views.add_comment, name="add_comment"),
 ]
