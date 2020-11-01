@@ -33,4 +33,20 @@
     </form>
     {% endif %}
 
+    {% if user.is_authenticated %}
+        <form action="add_comment" method="POST">
+            {% csrf_token %}
+            <input type="text" name="comment" placeholder="Comment..."><br>
+            <button name="listing" value="{{listing.id}}">Add Comment</button>
+        </form>
+    {% endif %}
+    
+    <h2>All Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{comment.who_added.username}}: {{comment.description}}</li>
+        {% empty %}
+            <li>No Comment Yet...</li>
+        {% endfor %}
+    </ul>
 {% endblock %}

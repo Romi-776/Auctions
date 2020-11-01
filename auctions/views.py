@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, auction_listing
+from .models import User, auction_listing, comment
 
 # List of categories that we want to ask from users to choose from
 categories_types = ['Furniture', 'Fashion', 'Electronics',
@@ -139,10 +139,12 @@ def listing(request, listing_id):
         # when user came by get method, i.e, by clicking on
         # a particular listing or filling the link to the search bar
         if listing:
+            comments = comment.objects.filter(for_which_listing=listing)
             # then we're checking that the listing exists and
             # if it exists then show that listing
             return render(request, "auctions/listing.html", {
-                "listing": listing
+                "listing": listing,
+                "comments": comments
             })
         else:
             # otherwise show an Error
@@ -172,6 +174,8 @@ def all_listings(request):
 
 # adding a listing to a user's watchlist or
 # seeing all the watchlisted items of that user
+
+
 def watchlist(request):
     # when the user clicks on add to watchlist button
     if request.method == 'POST':
@@ -180,13 +184,13 @@ def watchlist(request):
 
         # get the listing with that listing_id
         listing_obj = auction_listing.objects.get(id=listing_id)
-        
+
         # add that listing to the watchlist of currently logged in user
         request.user.watchlist.add(listing_obj)
 
         # return the same page of that listing with a success message
         return render(request, "auctions/listing.html", {
-            "listing": listing_obj, 
+            "listing": listing_obj,
             "message": "Listing added to Watchlist",
         })
     # when the user clicks on watchlist button to see all
@@ -198,6 +202,8 @@ def watchlist(request):
         })
 
 # remove an item from a particular user's watchlisted items.
+
+
 def remove(request):
     # when user clicks on Remove from watchlist button
     if request.method == "POST":
@@ -206,11 +212,34 @@ def remove(request):
         # get that listing with the previous id
         listing_obj = auction_listing.objects.get(id=listing_id)
 
-        # remove that listing from the watchlist of the currently logged in user 
+        # remove that listing from the watchlist of the currently logged in user
         request.user.watchlist.remove(listing_obj)
 
         # return the same listing page with a success message
         return render(request, "auctions/listing.html", {
             "listing": listing_obj,
             "message": "Listing removed from Watchlist",
+        })
+
+
+# when someone clicks on add comment button
+def add_comment(request):
+    if request.method == "POST":
+        comment_des = request.POST.get("comment")
+        comment_owner = request.user
+        commented_listing_id = request.POST["listing"]
+        commented_listing_obj = auction_listing.objects.get(
+            id=commented_listing_id)
+
+        # then create a new column for that written comment
+        new_comment = comment(
+            who_added=comment_owner, description=comment_des, for_which_listing=commented_listing_obj)
+        new_comment.save()
+
+        # return to that same listing's page and show a success message along with all the comments
+        # which should also include the newly made comment
+        return render(request, "auctions/listing.html", {
+            "listing": commented_listing_obj,
+            "message": "New Comment Added",
+            "comments": comment.objects.filter(for_which_listing=commented_listing_obj)
         })
