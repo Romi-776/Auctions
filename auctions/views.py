@@ -139,7 +139,7 @@ def listing(request, listing_id):
         # when user came by get method, i.e, by clicking on
         # a particular listing or filling the link to the search bar
         if listing:
-            comments = comment.objects.filter(for_which_listing=listing)
+            comments = comment.objects.filter(for_which_listing=listing).order_by('-when_added')
             # then we're checking that the listing exists and
             # if it exists then show that listing
             return render(request, "auctions/listing.html", {
@@ -231,7 +231,7 @@ def add_comment(request):
         commented_listing_obj = auction_listing.objects.get(
             id=commented_listing_id)
 
-        # then create a new column for that written comment
+        # then create a new column for that written comment in database
         new_comment = comment(
             who_added=comment_owner, description=comment_des, for_which_listing=commented_listing_obj)
         new_comment.save()
@@ -241,5 +241,5 @@ def add_comment(request):
         return render(request, "auctions/listing.html", {
             "listing": commented_listing_obj,
             "message": "New Comment Added",
-            "comments": comment.objects.filter(for_which_listing=commented_listing_obj)
+            "comments": comment.objects.filter(for_which_listing=commented_listing_obj).order_by('-when_added')
         })

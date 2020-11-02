@@ -44,7 +44,7 @@
     <h2>All Comments</h2>
     <ul>
         {% for comment in comments %}
-            <li>{{comment.who_added.username}}: {{comment.description}}</li>
+            <li> <h4>{{comment.who_added.username}}</h6> {{comment.description}}</li>
         {% empty %}
             <li>No Comment Yet...</li>
         {% endfor %}
