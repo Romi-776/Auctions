@@ -1,1 +1,5 @@
 Implement the biding feature 
+    Right now when add_comment is trying to get the max_amount
+    then it gets max_amount from all the listings.
+    Fix it to only get from a specific listing and if that listing 
+    doesn't exist then check for default value to add that listing's bid 

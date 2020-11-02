@@ -2,8 +2,12 @@
 
 {% block body %}
     {% if message %}
-    <div class="alert alert-success">
+    <div class="alert alert-success" role="alert">
         <strong>Success! </strong> {{message}}.
+      </div>
+    {% elif error_message %}
+    <div class="alert alert-danger" role="alert">
+        <strong>Error! </strong> {{error_message}}.
       </div>
     {% endif %}
 
@@ -13,6 +17,15 @@
     Category: {{listing.category}} <br>
     Created When: {{listing.added_when}} <br>
     Created By: {{listing.created_by}}
+
+    {% if user.is_authenticated and listing.active %}
+    <form action="add_bid" method="POST">
+        {% csrf_token %}
+        Enter Bid: (Rs)
+        <input type="number" name="amount">
+        <button name="listing" value="{{listing.id}}">My Bid</button>
+    </form>
+    {% endif %}
 
     {% if request.user.username == listing.created_by and listing.active %}
         <form action="{{listing.id}}" method="POST">

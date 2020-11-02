@@ -1,10 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
+from django.db import IntegrityError, models
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, auction_listing, comment
+from .models import User, auction_listing, comment, bid
 
 # List of categories that we want to ask from users to choose from
 categories_types = ['Furniture', 'Fashion', 'Electronics',
@@ -139,7 +139,8 @@ def listing(request, listing_id):
         # when user came by get method, i.e, by clicking on
         # a particular listing or filling the link to the search bar
         if listing:
-            comments = comment.objects.filter(for_which_listing=listing).order_by('-when_added')
+            comments = comment.objects.filter(
+                for_which_listing=listing).order_by('-when_added')
             # then we're checking that the listing exists and
             # if it exists then show that listing
             return render(request, "auctions/listing.html", {
@@ -242,4 +243,52 @@ def add_comment(request):
             "listing": commented_listing_obj,
             "message": "New Comment Added",
             "comments": comment.objects.filter(for_which_listing=commented_listing_obj).order_by('-when_added')
+        })
+
+
+# when any user clicks on My Bid button
+def add_bid(request):
+    if request.method == "POST":
+        # getting the amount that the user want to bid
+        amount = request.POST['amount']
+        # getting the listing on which the user wants to bid
+        listing_id = request.POST['listing']
+        listing_obj = auction_listing.objects.get(
+            id=listing_id)
+
+        # gettting the max bid until now on that listing
+        max_bid = bid.objects.all().aggregate(
+            models.Max('bid_amount'))['bid_amount__max']
+
+        # if there's any bid until now on that listing
+        if max_bid:
+            # then if the amount is less than the max bid
+            if max_bid >= int(amount):
+                # then don't make that bid and return an error message
+                return render(request, "auctions/listing.html", {
+                    "listing": listing_obj,
+                    "error_message": f"Bid amount should be greater than the highest(Rs-{max_bid}) current bid",
+                })
+        # otherwise
+        else:
+            # check that the biding amount is greater than the default value of that bid
+            if amount <= 100:
+                # then don't make that bid and return an error message
+                return render(request, "auctions/listing.html", {
+                    "listing": listing_obj,
+                    "error_message": "Bid amount should be greater than the default(Rs-100) bid",
+                })
+
+        # getting the info of user who made that bid
+        made_by = request.user
+
+        # making new bid and saving it
+        new_bid = bid(bid_amount=amount, bid_made_by=made_by,
+                      for_which_listing=listing_obj)
+        new_bid.save()
+
+        # returning to that page with a success message
+        return render(request, "auctions/listing.html", {
+            "listing": listing_obj,
+            "message": "New Bid Added",
         })

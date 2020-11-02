@@ -23,7 +23,11 @@ class User(AbstractUser):
 
 
 class bid(models.Model):
-    pass
+    bid_amount = models.IntegerField(unique=True, default=100)
+    bid_made_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="bid_owner", default="")
+    for_which_listing = models.ForeignKey(
+        auction_listing, on_delete=models.CASCADE, default="")
 
 
 class comment(models.Model):
