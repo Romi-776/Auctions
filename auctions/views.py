@@ -193,6 +193,7 @@ def watchlist(request):
         return render(request, "auctions/listing.html", {
             "listing": listing_obj,
             "message": "Listing added to Watchlist",
+            "comments": comment.objects.filter(for_which_listing=listing_obj).order_by('-when_added')
         })
     # when the user clicks on watchlist button to see all
     # its watchlisted items
@@ -220,6 +221,7 @@ def remove(request):
         return render(request, "auctions/listing.html", {
             "listing": listing_obj,
             "message": "Listing removed from Watchlist",
+            "comments": comment.objects.filter(for_which_listing=listing_obj).order_by('-when_added')
         })
 
 
