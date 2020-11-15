@@ -3,3 +3,10 @@ Implement the biding feature
     then it gets max_amount from all the listings.
     Fix it to only get from a specific listing and if that listing 
     doesn't exist then check for default value to add that listing's bid 
+
+Done Above
+
+
+Right Now when a different user tries to add a new bid on a lisitng 
+which already has some bidings of the other user, is showing an error 
+of integrity and uniqueness. solve this.

@@ -252,14 +252,14 @@ def add_comment(request):
 def add_bid(request):
     if request.method == "POST":
         # getting the amount that the user want to bid
-        amount = request.POST['amount']
+        amount = int(request.POST['amount'])
         # getting the listing on which the user wants to bid
         listing_id = request.POST['listing']
         listing_obj = auction_listing.objects.get(
             id=listing_id)
 
         # gettting the max bid until now on that listing
-        max_bid = bid.objects.all().aggregate(
+        max_bid = bid.objects.filter(for_which_listing=listing_obj).aggregate(
             models.Max('bid_amount'))['bid_amount__max']
 
         # if there's any bid until now on that listing
