@@ -1,12 +1,11 @@
-Implement the biding feature 
-    Right now when add_bid is trying to get the max_amount
-    then it gets max_amount from all the listings.
-    Fix it to only get from a specific listing and if that listing 
-    doesn't exist then check for default value to add that listing's bid 
+To Do 
 
-Done Above
+1.  Add the feature of adding a starting bid while creating a new listing
 
-
-Right Now when a different user tries to add a new bid on a lisitng 
-which already has some bidings of the other user, is showing an error 
-of integrity and uniqueness. solve this.
+2.  If the user is signed in and is the one who created the listing, the user 
+    should have the ability to “close” the auction from this page, which makes 
+    the highest bidder the winner of the auction and makes the listing no longer 
+    active.
+    
+3.  If a user is signed in on a closed listing page, and the user has won 
+    that auction, the page should say so.
