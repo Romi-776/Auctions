@@ -6,7 +6,8 @@
         {% csrf_token %}
         Title: <input type="text" name="title"><br>
         Description:<textarea name="description" cols="30" placeholder="Enter Details of your product..." rows="1"></textarea><br>
-        Image Url: <input type="text" name="image_url">
+        Image Url: <input type="text" name="image_url"><br>
+        Starting Bid: <input type="number" name="starting_bid"><br>
         Category: <select name="category">
             {% for cat in categories%}
                 <option value="{{cat}}">{{cat}}</option>

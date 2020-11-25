@@ -30,9 +30,10 @@ def create_listing(request):
         Des = request.POST["description"]
         url = request.POST["image_url"]
         category = request.POST["category"]
+        starting_bid = int(request.POST["starting_bid"])
 
         listing = auction_listing(
-            title=Title, description=Des, image_url=url, category=category, created_by=request.user.username)
+            title=Title, description=Des, image_url=url, category=category, created_by=request.user.username, starting_bid=starting_bid)
 
         # saving that object to the DB
         listing.save()
@@ -273,12 +274,13 @@ def add_bid(request):
                 })
         # otherwise
         else:
+            starting_bid = listing_obj.starting_bid
             # check that the biding amount is greater than the default value of that bid
-            if amount <= 100:
+            if amount <= starting_bid:
                 # then don't make that bid and return an error message
                 return render(request, "auctions/listing.html", {
                     "listing": listing_obj,
-                    "error_message": "Bid amount should be greater than the default(Rs-100) bid",
+                    "error_message": f"Bid amount should be greater than the default(Rs-{starting_bid}) bid",
                 })
 
         # getting the info of user who made that bid
