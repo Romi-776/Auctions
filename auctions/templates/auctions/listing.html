@@ -18,9 +18,10 @@
     <img src="{{listing.image_url}}"> <br>
     Category: {{listing.category}} <br>
     Created When: {{listing.added_when}} <br>
-    Created By: {{listing.created_by}}
+    Created By: {{listing.created_by}} <br>
 
 <!-- Doing the biding part --->
+    Max Bid Till Now: Rs. {{max_bid_till_now}}
     {% if user.is_authenticated and listing.active %}
     <form action="add_bid" method="POST">
         {% csrf_token %}

@@ -1,6 +1,6 @@
 To Do 
 
-1.  Add the feature of adding a starting bid while creating a new listing
+1. Show the amount of the highest bid yet below the listing to all the users.
 
 2.  If the user is signed in and is the one who created the listing, the user 
     should have the ability to “close” the auction from this page, which makes 
