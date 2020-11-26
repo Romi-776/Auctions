@@ -142,26 +142,36 @@ def listing(request, listing_id):
             comments = comment.objects.filter(
                 for_which_listing=listing).order_by('-when_added')
 
-            # getting the max_bid on that listing
-            max_bid = bid.objects.filter(for_which_listing=listing).aggregate(
-            models.Max('bid_amount'))['bid_amount__max']
-
             max_bid_till_now = 0
 
-            # if someone had bid on that listing unitl now 
+            # getting the max_bid on that listing
+            max_bid = bid.objects.filter(for_which_listing=listing).aggregate(
+                models.Max('bid_amount'))['bid_amount__max']
+                
+            # if someone had bid on that listing unitl now
             if max_bid:
                 max_bid_till_now = max_bid
-                
-            # otherwise
             else:
+                #otherwise
                 max_bid_till_now = listing.starting_bid
+                
+            max_bidder = ""
+
+            # getting the name of that person who made the highest bid on that listing
+            max_bidder = bid.objects.filter(bid_amount=max_bid).first()
+                
+            if max_bidder:
+                max_bidder = max_bidder.bid_made_by.username
+            else:
+                max_bidder = listing.created_by
 
             # then we're checking that the listing exists and
             # if it exists then show that listing
             return render(request, "auctions/listing.html", {
                 "listing": listing,
                 "comments": comments,
-                "max_bid_till_now": max_bid_till_now
+                "max_bid_till_now": max_bid_till_now,
+                "max_bidder": max_bidder
             })
         except auction_listing.DoesNotExist:
             # otherwise show an Error
@@ -313,4 +323,6 @@ def add_bid(request):
         return render(request, "auctions/listing.html", {
             "listing": listing_obj,
             "message": "New Bid Added",
+            "max_bid_till_now": amount,
+            "max_bidder": request.user.username
         })

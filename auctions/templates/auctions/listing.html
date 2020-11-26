@@ -21,7 +21,8 @@
     Created By: {{listing.created_by}} <br>
 
 <!-- Doing the biding part --->
-    Max Bid Till Now: Rs. {{max_bid_till_now}}
+    Max Bid Till Now: Rs. {{max_bid_till_now}} made by {{max_bidder}}
+    
     {% if user.is_authenticated and listing.active %}
     <form action="add_bid" method="POST">
         {% csrf_token %}
