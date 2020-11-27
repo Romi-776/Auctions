@@ -4,13 +4,17 @@
 {% if message %}
 <!-- Message to display when any user changes something on this page -->
     <div class="alert alert-success" role="alert">
-        <strong>Success! </strong> {{message}}.
+         <strong>Success! </strong> {{message}}
     </div>
 {% elif simple_message and user.is_authenticated %}
     {% if request.user.username == max_bidder %}
         <div class="alert alert-info" role="alert">
             <strong>Congrats, </strong>You{{simple_message}}!
         </div>
+    {% elif request.user.username == listing.created_by %}
+    <div class="alert alert-info" role="alert">
+        <strong>{{max_bidder}}</strong> {{simple_message}}
+    </div>
     {% else %}
     <div class="alert alert-info" role="alert">
         {{simple_message}}
