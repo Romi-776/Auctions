@@ -1,7 +1,2 @@
 
 Completed all the requirements.
-
-Ask Upinder about the below program's output explaination???
-
-    int a = 1, b = 1, d = 1;
-    printf("%d %d %d", ++a + ++a + a++, a++ + ++b, ++d + d++ + a++);
