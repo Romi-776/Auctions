@@ -11,7 +11,8 @@ class auction_listing(models.Model):
     category = models.CharField(default="Other", max_length=32)
     created_by = models.CharField(default="User", max_length=64)
     starting_bid = models.IntegerField(default=0)
-    
+    who_won_this_listing = models.CharField(default="", max_length=64)
+
     def __str__(self):
         return f"{self.id}: Product - {self.title}"
 

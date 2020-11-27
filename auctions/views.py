@@ -147,32 +147,46 @@ def listing(request, listing_id):
             # getting the max_bid on that listing
             max_bid = bid.objects.filter(for_which_listing=listing).aggregate(
                 models.Max('bid_amount'))['bid_amount__max']
-                
+
             # if someone had bid on that listing unitl now
             if max_bid:
                 max_bid_till_now = max_bid
             else:
-                #otherwise
+                # otherwise
                 max_bid_till_now = listing.starting_bid
-                
+
             max_bidder = ""
 
             # getting the name of that person who made the highest bid on that listing
             max_bidder = bid.objects.filter(bid_amount=max_bid).first()
-                
+
             if max_bidder:
                 max_bidder = max_bidder.bid_made_by.username
             else:
                 max_bidder = listing.created_by
 
-            # then we're checking that the listing exists and
-            # if it exists then show that listing
-            return render(request, "auctions/listing.html", {
-                "listing": listing,
-                "comments": comments,
-                "max_bid_till_now": max_bid_till_now,
-                "max_bidder": max_bidder
-            })
+            if listing.active:
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "comments": comments,
+                    "max_bid_till_now": max_bid_till_now,
+                    "max_bidder": max_bidder,
+                })
+            else:
+                message = ""
+
+                if listing.created_by != max_bidder:
+                    message = " won this listing"
+                else:
+                    message = " Biding Ended. No one had done any biding on that listing"
+
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "comments": comments,
+                    "max_bid_till_now": max_bid_till_now,
+                    "max_bidder": max_bidder,
+                    "simple_message": message
+                })
         except auction_listing.DoesNotExist:
             # otherwise show an Error
             return HttpResponse(f"<h1>This Listing Does Not Exist</h1>")
@@ -184,6 +198,18 @@ def listing(request, listing_id):
         # getting the listing on which the user had clicked
         listing = auction_listing.objects.filter(id=listing_id).get()
 
+        comments = comment.objects.filter(
+            for_which_listing=listing).order_by('-when_added')
+
+        max_bidder = request.POST['MaxBidderName']
+
+        message = ""
+
+        if listing.created_by != max_bidder:
+            message = f" {max_bidder} won this listing."
+        else:
+            message = " Biding Ended. No one had done any biding on that listing."
+
         # then make that listing inactive
         listing.active = False
 
@@ -191,7 +217,13 @@ def listing(request, listing_id):
         listing.save(update_fields=["active"])
 
         # show the remaining active listings on index page
-        return HttpResponseRedirect(reverse("index"))
+        return render(request, "auctions/listing.html", {
+            "listing": listing,
+            "comments": comments,
+            "max_bid_till_now": request.POST['max_bid_till_now'],
+            "max_bidder": max_bidder,
+            "message": message
+        })
 
 
 def all_listings(request):
@@ -287,6 +319,9 @@ def add_bid(request):
         listing_obj = auction_listing.objects.get(
             id=listing_id)
 
+        comments = comment.objects.filter(
+                for_which_listing=listing_obj).order_by('-when_added')
+
         # gettting the max bid until now on that listing
         max_bid = bid.objects.filter(for_which_listing=listing_obj).aggregate(
             models.Max('bid_amount'))['bid_amount__max']
@@ -299,6 +334,7 @@ def add_bid(request):
                 return render(request, "auctions/listing.html", {
                     "listing": listing_obj,
                     "error_message": f"Bid amount should be greater than the highest(Rs-{max_bid}) current bid",
+                    "comments":comments
                 })
         # otherwise
         else:
@@ -309,6 +345,7 @@ def add_bid(request):
                 return render(request, "auctions/listing.html", {
                     "listing": listing_obj,
                     "error_message": f"Bid amount should be greater than the default(Rs-{starting_bid}) bid",
+                    "comments": comments
                 })
 
         # getting the info of user who made that bid
@@ -324,5 +361,6 @@ def add_bid(request):
             "listing": listing_obj,
             "message": "New Bid Added",
             "max_bid_till_now": amount,
-            "max_bidder": request.user.username
+            "max_bidder": request.user.username,
+            "comments": comments
         })

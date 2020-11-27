@@ -1,16 +1,27 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% if message %}
 <!-- Message to display when any user changes something on this page -->
-    {% if message %}
     <div class="alert alert-success" role="alert">
         <strong>Success! </strong> {{message}}.
-      </div>
-    {% elif error_message %}
+    </div>
+{% elif simple_message and user.is_authenticated %}
+    {% if request.user.username == max_bidder %}
+        <div class="alert alert-info" role="alert">
+            <strong>Congrats, </strong>You{{simple_message}}!
+        </div>
+    {% else %}
+    <div class="alert alert-info" role="alert">
+        {{simple_message}}
+    </div>
+    {% endif %}
+{% elif error_message %}
+<!-- Error Message -->
     <div class="alert alert-danger" role="alert">
         <strong>Error! </strong> {{error_message}}.
       </div>
-    {% endif %}
+{% endif %}
 
 <!-- Displaying the details of the listing -->
     <h1>{{listing.title}}</h1>
@@ -20,7 +31,7 @@
     Created When: {{listing.added_when}} <br>
     Created By: {{listing.created_by}} <br>
 
-<!-- Doing the biding part --->
+<!-- Biding part --->
     Max Bid Till Now: Rs. {{max_bid_till_now}} made by {{max_bidder}}
     
     {% if user.is_authenticated and listing.active %}
@@ -32,15 +43,17 @@
     </form>
     {% endif %}
 
-<!-- End listing button -->    
     {% if request.user.username == listing.created_by and listing.active %}
+    <!-- End listing button -->    
         <form action="{{listing.id}}" method="POST">
             {% csrf_token %}
-            <input type="submit" name="false" value="End listing">    
+            <input name="max_bid_till_now" value="{{max_bid_till_now}}" hidden>
+            <input name="MaxBidderName" value="{{max_bidder}}" hidden>
+            <input type="submit" value="End Listing">    
         </form>    
     {% endif %}
 
-<!-- Wathclist button -->
+<!-- Watchlist button -->
     {% if listing not in request.user.watchlist.all %}
     <form action="watchlist" method="POST">
         {% csrf_token %}
