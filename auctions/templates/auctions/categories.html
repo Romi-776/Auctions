@@ -1,14 +1,20 @@
-{% extends "auctions/layout.html" %} {% block body %} {% if POST %}
+{% extends "auctions/layout.html" %}
+
+
+{% block body %}
+
+<!-- When the category is chosen by the user -->
+{% if POST %}
 <h1 id="top">{{choosen_category}}</h1><br>
 <ul>
   {% for auction_listing in category_list %}
   <li>
     <a href="{{auction_listing.id}}" style="text-decoration: none;color: black;">
-    <div>
-      <h3>{{auction_listing.title}}</h3>
-      <img src="{{auction_listing.image_url}}" /><br />
-      Created: {{auction_listing.added_when}}
-    </div>
+      <div>
+        <h3>{{auction_listing.title}}</h3>
+        <img src="{{auction_listing.image_url}}" /><br />
+        Created: {{auction_listing.added_when}}
+      </div>
     </a>
   </li>
   {% empty %}
@@ -17,17 +23,28 @@
   <a href="{% url 'categories' %}">Go back</a>
   {% endfor %}
 </ul>
+
+<!-- When the category is not chosen by the user -->
 {% else %}
-<h1>Choose Category</h1>
-<form action="{% url 'categories' %}" method="POST">
-  {% csrf_token %}
-  <select name="category">
-    {% for cat in categories %}
-    <option value="{{cat}}">{{cat}}</option>
-    {% endfor %}
-  </select>
-  <button>View</button>
-</form>
+<center>
+  <h2 class="text-muted">Choose Category</h2>
+  <form action="{% url 'categories' %}" method="POST">
+    {% csrf_token %}
+
+    <div class="form-group col row">
+      <label for="inputCategory" class="col-sm-2 col-form-label">Category:</label>
+      <div class="col-sm-10">
+        <select class="form-control" name="category">
+          {% for cat in categories %}
+          <option value="{{cat}}">{{cat}}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div><br>
+
+    <button class="btn btn-primary">View</button>
+  </form>
+</center>
 {% endif %}
 
 {% endblock %}

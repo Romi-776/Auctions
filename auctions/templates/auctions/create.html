@@ -1,18 +1,61 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Enter Product Details</h2>
-    <form action="{% url 'create_listing' %}", method="POST">
+<!--Title of the page -->
+<center>
+    <h2 class="text-muted">Enter Product Details</h2>
+
+    <form action="{% url 'create_listing' %}" , method="POST">
         {% csrf_token %}
-        Title: <input type="text" name="title"><br>
-        Description:<textarea name="description" cols="30" placeholder="Enter Details of your product..." rows="1"></textarea><br>
-        Image Url: <input type="text" name="image_url"><br>
-        Starting Bid: <input type="number" name="starting_bid"><br>
-        Category: <select name="category">
-            {% for cat in categories%}
-                <option value="{{cat}}">{{cat}}</option>
-            {% endfor %}
-        </select>
-        <button>Submit</button>
+        <!--Title of the product -->
+        <div class="form-group col row">
+            <label for="inputTitle" class="col-sm-2 col-form-label">Title:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputTitle" name="title" placeholder="Title">
+            </div>
+        </div><br>
+
+        <!--Description of the product -->
+        <div class="form-group col row">
+            <label for="inputDes" class="col-sm-2 col-form-label">Description</label>
+            <div class="col-sm-10">
+                <textarea name="description" class="form-control" id="inputDes" rows="4"
+                    placeholder="Product Detail"></textarea>
+            </div>
+        </div><br>
+
+        <!--Image url of the product -->
+        <div class="form-group col row">
+            <label for="inputImage" class="col-sm-2 col-form-label">Image Url:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputImage" name="image_url" placeholder="URL">
+            </div>
+        </div><br>
+
+        <!--Staring Bid of the product -->
+        <div class="form-group col row">
+            <label for="inputBid" class="col-sm-2 col-form-label">Starting Bid:</label>
+            <div class="col-sm-10">
+                <input type="number" class="form-control" id="inputBid" name="starting_bid" placeholder="Bid Amount">
+            </div>
+        </div><br>
+
+        <!--Category of the product -->
+        <div class="form-group col row">
+            <label for="inputCategory" class="col-sm-2 col-form-label">Category:</label>
+            <div class="col-sm-10">
+                <select name="category" class="form-control" id="inputCategory">
+                    {% for cat in categories%}
+                    <option value="{{cat}}">{{cat}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div><br>
+
+        <!-- Form Submission -->
+        <button type="submit" class="btn btn-primary">Submit</button>
+
     </form>
+</center>
+
 {% endblock %}
