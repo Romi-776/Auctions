@@ -7,14 +7,17 @@
     <strong>Success! </strong> {{message}}
 </div>
 {% elif simple_message and user.is_authenticated %}
+<!-- when the user is the one who had done the highest biding -->
 {% if request.user.username == max_bidder %}
 <div class="alert alert-info" role="alert">
     <strong>Congrats, </strong>You{{simple_message}}!
 </div>
-{% elif request.user.username == listing.created_by %}
+<!-- when the message contains won word which means there's someone who won this listing -->
+{% elif "won" in simple_message %}
 <div class="alert alert-info" role="alert">
-    <strong>{{max_bidder}}</strong> {{simple_message}}
+    <strong>@{{max_bidder}}</strong> {{simple_message}}
 </div>
+<!-- otherwise when the biding isn't done by anyone -->
 {% else %}
 <div class="alert alert-info" role="alert">
     {{simple_message}}
@@ -138,16 +141,16 @@
 
 <div class="row" style="margin-top: 20px;">
     <div class="col-lg-8" style="margin-left: auto; margin-right: auto;">
-        <div class="card" >
+        <div class="card">
             <div class="card-header text-center">
                 <strong>ALL COMMENTS</strong>
             </div>
             <div class="card-body">
                 {% for comment in comments %}
-                <h4 class="text-center"> <b>{{comment.who_added.username}}</b> 
+                <h4 class="text-center"> <b>{{comment.who_added.username}}</b>
                     <span style="font-size: 15px;" class="text-muted">(on {{comment.when_added}}) </span>
                 </h4>
-                
+
                 <p class="text-center">
                     {{comment.description}}
                 </p>

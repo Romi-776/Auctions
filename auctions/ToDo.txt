@@ -1,2 +1,3 @@
-
 Completed all the requirements.
+
+Improve the message which shows that who win a specific listing when the listing is closed.
