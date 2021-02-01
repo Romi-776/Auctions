@@ -1,17 +1,31 @@
 {% extends "auctions/layout.html" %}
 {% block body %}
-<h2>Watchlist</h2>
-    <ul>
-        {% for listing in watchlist %}
-            <li>
-                <a href="{{listing.id}}" style="text-decoration: none;color: black;"><div>
-                    <h3>{{listing.title}}</h3>
-                    <img src="{{listing.image_url}}" /><br />
-                    Created: {{listing.added_when}}
-                </div></a>
-            </li>
-        {% empty %}
-            <h3>No Listing in Watchlist</h3>
-        {% endfor %}
-    </ul>
+<div class="text-center">
+    <h2 class="text-muted">Watchlist</h2>
+</div>
+
+
+{% for listing in watchlist %}
+<div class="card">
+    <div class="container">
+        <div class="card-body">
+            <a href="{{listing.id}}" class="card-link" style="text-decoration: none;color: black;">
+                <div>
+                    <img class="rounded container__image float-left" src="{{listing.image_url}}" height="200px" />
+
+                    <div class="container__text">
+                        <h4 class="card-title text-left"> {{listing.title}}</h4>
+                        <p class="card-text text-left">
+                            {{listing.description}} <br>
+                            <span class="text-muted font-weight-light">Created: {{listing.added_when}}</span>
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div><br>
+{% empty %}
+<h4 class="text-center">No Listing in Watchlist :(</h4>
+{% endfor %}
 {% endblock %}

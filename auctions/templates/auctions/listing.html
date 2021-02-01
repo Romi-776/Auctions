@@ -28,27 +28,139 @@
 {% endif %}
 
 <!-- Displaying the details of the listing -->
-<center>
+<div class="text-center">
     <h2>{{listing.title}}</h2>
-</center>
-{{listing.description}} <br>
-<img src="{{listing.image_url}}"> <br>
-Category: {{listing.category}} <br>
-Created When: {{listing.added_when}} <br>
-Created By: {{listing.created_by}} <br>
+</div>
 
-<!-- Biding part --->
-Max Bid Till Now: Rs. {{max_bid_till_now}} made by {{max_bidder}}
-
-{% if user.is_authenticated and listing.active %}
-<form action="add_bid" method="POST">
+<!-- Watchlist button -->
+{% if listing not in request.user.watchlist.all %}
+<form action="watchlist" method="POST">
     {% csrf_token %}
-    Enter Bid: (Rs)
-    <input type="number" name="amount">
-    <button name="listing" value="{{listing.id}}">My Bid</button>
+    <div class="text-left">
+        <button name="listing" class="btn-primary btn" value="{{listing.id}}">Add to watchlist</button>
+    </div>
+</form>
+{% elif listing in request.user.watchlist.all %}
+<form action="remove" method="POST">
+    {% csrf_token %}
+    <div class="text-left">
+        <button name="listing" class="btn btn-primary" value="{{listing.id}}">Remove from watchlist</button>
+    </div>
 </form>
 {% endif %}
 
+<div class="row">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card text-center">
+            <div class="container">
+                <img src="{{listing.image_url}}" style="height: 400px;margin-left: 60px;"
+                    class="rounded container__image float-right">
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-6 col-sm-12">
+        <div class="card" style="height: 400px;">
+            <div class="card-header text-center">
+                <h5> <b>Description</b> </h5>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
+                    {{listing.description}} <br> <br>
+                    <b>Category:</b> {{listing.category}} <br>
+                    <b>Created When:</b> {{listing.added_when}} <br>
+                    <b>Created By:</b> {{listing.created_by}} <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Biding part --->
+
+<div class="row" style="margin-top: 20px;">
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="card" style="height: 180px;">
+            <div class="card-header text-center">
+                <strong>BIDING SECTION</strong>
+            </div>
+            <div class="card-body">
+                <b>Max Bid Till Now: </b> Rs.{{max_bid_till_now}} made by <i>@{{max_bidder}}</i>
+
+                {% if user.is_authenticated and listing.active %}
+                <form action="add_bid" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group col row" style="margin-top: 5px;">
+                        <label for="inputBId" class="col-sm-2 col-form-label">Bid:</label>
+                        <div class="col-sm-10 text-center">
+                            <input type="number" class="form-control" id="inputBid" name="amount"
+                                placeholder="Add Your Bid Amount Here">
+                            <button name="listing" style="margin-top: 10px;" class="btn btn-primary"
+                                value="{{listing.id}}">My Bid</button>
+                        </div>
+                    </div><br>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 col-md-6 col-sm-12">
+        <div class="card" style="height: 180px;">
+            <div class="card-header text-center">
+                <strong>COMMENT SECTION</strong>
+            </div>
+            <div class="card-body" style="line-height: 75px;">
+                <!-- Comments -->
+                {% if user.is_authenticated %}
+                <form action="add_comment" method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group col row" style="margin-top: 15px;">
+                        <label for="inputComment" class="col-sm-2 col-form-label">Comment:</label>
+                        <div class="col-sm-10 text-center">
+                            <input type="text" class="form-control" id="inputComment" name="comment"
+                                placeholder="New Comment">
+                            <button name="listing" style="margin-top: 1px;" class="btn btn-primary"
+                                value="{{listing.id}}">Add Comment</button>
+                        </div>
+                    </div><br>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 20px;">
+    <div class="col-lg-8" style="margin-left: auto; margin-right: auto;">
+        <div class="card" >
+            <div class="card-header text-center">
+                <strong>ALL COMMENTS</strong>
+            </div>
+            <div class="card-body">
+                {% for comment in comments %}
+                <h4 class="text-center"> <b>{{comment.who_added.username}}</b> 
+                    <span style="font-size: 15px;" class="text-muted">(on {{comment.when_added}}) </span>
+                </h4>
+                
+                <p class="text-center">
+                    {{comment.description}}
+                </p>
+                {% empty %}
+                <p class="text-center">No Comment Yet :(</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-------------------------------------------------------------------------------->
 {% if request.user.username == listing.created_by and listing.active %}
 <!-- End listing button -->
 <form action="{{listing.id}}" method="POST">
@@ -59,36 +171,4 @@ Max Bid Till Now: Rs. {{max_bid_till_now}} made by {{max_bidder}}
 </form>
 {% endif %}
 
-<!-- Watchlist button -->
-{% if listing not in request.user.watchlist.all %}
-<form action="watchlist" method="POST">
-    {% csrf_token %}
-    <button name="listing" value="{{listing.id}}">Add to watchlist</button>
-</form>
-{% elif listing in request.user.watchlist.all %}
-<form action="remove" method="POST">
-    {% csrf_token %}
-    <button name="listing" value="{{listing.id}}">Remove from watchlist</button>
-</form>
-{% endif %}
-
-<!-- Comments -->
-{% if user.is_authenticated %}
-<form action="add_comment" method="POST">
-    {% csrf_token %}
-    <input type="text" name="comment" placeholder="Comment..."><br>
-    <button name="listing" value="{{listing.id}}">Add Comment</button>
-</form>
-{% endif %}
-
-<h2 class="text-muted">All Comments</h2>
-<ul>
-    {% for comment in comments %}
-    <li>
-        <h4 class="text-muted">{{comment.who_added.username}}</h4> {{comment.description}}
-    </li>
-    {% empty %}
-    <li>No Comment Yet...</li>
-    {% endfor %}
-</ul>
 {% endblock %}
