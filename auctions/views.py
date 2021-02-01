@@ -14,9 +14,18 @@ categories_types = ['Furniture', 'Fashion', 'Electronics',
 # main page of the website on which all the active listings
 # will be shown
 def index(request):
+    listings = auction_listing.objects.filter(active=True).order_by('added_when').reverse()
+    max_bids = []
+    for i in listings:
+        listing = auction_listing.objects.filter(id=i.id).get()
+        max_bid_till_now = int(bid.objects.filter(for_which_listing=listing).aggregate(
+                    models.Max('bid_amount'))['bid_amount__max'])
+        max_bids.append(max_bid_till_now)
+    listings = auction_listing.objects.filter(active=True).order_by('added_when').reverse()
+
     return render(request, "auctions/index.html", {
         # getting all the active listing from the DB in according to recent listing order
-        "listings": auction_listing.objects.filter(active=True).order_by('added_when').reverse()
+        "my_iterator": zip(listings, max_bids),
     })
 
 # page to create an auction listing
@@ -148,7 +157,7 @@ def listing(request, listing_id):
             max_bid = bid.objects.filter(for_which_listing=listing).aggregate(
                 models.Max('bid_amount'))['bid_amount__max']
 
-            # if someone had bid on that listing unitl now
+            # if someone had bid on that listing until now
             if max_bid:
                 max_bid_till_now = max_bid
             else:
