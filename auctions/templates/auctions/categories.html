@@ -5,24 +5,37 @@
 
 <!-- When the category is chosen by the user -->
 {% if POST %}
-<h1 id="top">{{choosen_category}}</h1><br>
-<ul>
-  {% for auction_listing in category_list %}
-  <li>
-    <a href="{{auction_listing.id}}" style="text-decoration: none;color: black;">
-      <div>
-        <h3>{{auction_listing.title}}</h3>
-        <img src="{{auction_listing.image_url}}" /><br />
-        Created: {{auction_listing.added_when}}
-      </div>
-    </a>
-  </li>
-  {% empty %}
-  <h3>No Active Listings Available</h3>
-  <br>
-  <a href="{% url 'categories' %}">Go back</a>
-  {% endfor %}
-</ul>
+<div class="text-center">
+  <h2 class="text-muted">Category: <b>{{choosen_category}}</b></h2>
+</div>
+
+{% for auction_listing in category_list %}
+<div class="card">
+  <div class="container">
+    <div class="card-body">
+      <a href="{{auction_listing.0.id}}" class="card-link" style="text-decoration: none;color: black;">
+        <div>
+          <img class="rounded container__image float-left" src="{{auction_listing.0.image_url}}" height="200px" />
+
+          <div class="container__text">
+            <h4 class="card-title text-left"> {{auction_listing.0.title}}</h4>
+            <p class="card-text text-left">
+              <b>Current Price:</b> Rs. {{auction_listing.1}} <br>
+              {{auction_listing.0.description}} <br>
+              <span class="text-muted font-weight-light">Created: {{auction_listing.0.added_when}}</span>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div><br>
+{% empty %}
+<h3>No Active Listings Available</h3>
+<br>
+<a href="{% url 'categories' %}">Go back</a>
+{% endfor %}
+
 
 <!-- When the category is not chosen by the user -->
 {% else %}

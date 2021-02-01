@@ -21,7 +21,6 @@ def index(request):
         max_bid_till_now = int(bid.objects.filter(for_which_listing=listing).aggregate(
                     models.Max('bid_amount'))['bid_amount__max'])
         max_bids.append(max_bid_till_now)
-    listings = auction_listing.objects.filter(active=True).order_by('added_when').reverse()
 
     return render(request, "auctions/index.html", {
         # getting all the active listing from the DB in according to recent listing order
@@ -121,11 +120,18 @@ def categories(request):
         category_list = auction_listing.objects.filter(
             category=choosen_category, active=True).all()
 
+        max_bids = []
+        for i in category_list:
+            listing = auction_listing.objects.filter(id=i.id).get()
+            max_bid_till_now = int(bid.objects.filter(for_which_listing=listing).aggregate(
+                        models.Max('bid_amount'))['bid_amount__max'])
+            max_bids.append(max_bid_till_now)
+
         # returning to the category page showing all the listings
         # that belongs to that category
         return render(request, "auctions/categories.html", {
             "choosen_category": choosen_category,
-            "category_list": category_list,
+            "category_list": zip(category_list, max_bids),
             "POST": 1
         })
 
