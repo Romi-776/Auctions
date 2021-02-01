@@ -1,7 +1,30 @@
 body {
-    padding: 10px;
+  padding: 5px 10px 10px 10px;
 }
 
-img {
-    border: 5px solid black;
+.container {
+  align-content: flex-start;
+  border: 1px solid grey;
+  padding: 0px;
+  max-width: 100%;
+  display: flex;
+}
+.container__image {
+  margin: 0px 35px 0 10px;
+  width: 270px;
+  -o-object-fit: contain;
+  object-fit: contain;
+  align-self: flex-start;
+}
+.container__text {
+  flex: 1 1 auto;
+  padding-top: 20px;
+}
+.card-body{
+  padding: 5px 5px 5px 20px;
+}
+
+hr {
+  margin-top: 0;
+  margin-bottom: 0;
 }

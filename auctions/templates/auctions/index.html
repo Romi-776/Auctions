@@ -1,26 +1,28 @@
 {% extends "auctions/layout.html" %} {% block body %}
-<center>
+<div class="text-center">
   <h2 class="text-muted">Active Listings</h2>
+</div>
 
-</center>
-
-
-{% for auction_listing in listings%}
+<!-- my_iterator is a zip of two lists containing info about a listing and the max_bid on it -->
+{% for auction_listing in my_iterator %}
 <div class="card">
-  <div class="card-body">
-    <a href="{{auction_listing.id}}" class="card-link" style="text-decoration: none;color: black;">
-      <div>
+  <div class="container">
+    <div class="card-body">
+      <a href="{{auction_listing.0.id}}" class="card-link" style="text-decoration: none;color: black;">
         <div>
-          <img class="rounded float-left" src="{{auction_listing.image_url}}" height="280px" width="auto" />
+          <img class="rounded container__image float-left" src="{{auction_listing.0.image_url}}" height="200px" />
+
+          <div class="container__text">
+            <h4 class="card-title text-left"> {{auction_listing.0.title}}</h4>
+            <p class="card-text text-left">
+              <b>Current Price:</b> Rs. {{auction_listing.1}} <br>
+              {{auction_listing.0.description}} <br>
+              <span class="text-muted font-weight-light">Created: {{auction_listing.0.added_when}}</span> 
+            </p>
+          </div>
         </div>
-        <center>
-          <h3 class="card-title text-right"> {{auction_listing.title}}</h3>
-          <p class="card-text text-right">
-            Created: {{auction_listing.added_when}}
-          </p>
-        </center>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
 </div><br>
 {% empty %}
