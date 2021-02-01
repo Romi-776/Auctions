@@ -17,9 +17,14 @@ def index(request):
     listings = auction_listing.objects.filter(active=True).order_by('added_when').reverse()
     max_bids = []
     for i in listings:
-        listing = auction_listing.objects.filter(id=i.id).get()
-        max_bid_till_now = int(bid.objects.filter(for_which_listing=listing).aggregate(
-                    models.Max('bid_amount'))['bid_amount__max'])
+        max_bid_till_now = bid.objects.filter(for_which_listing=i).aggregate(
+                    models.Max('bid_amount'))['bid_amount__max']
+        # if someone had bid on that listing until now
+        if max_bid_till_now:
+            max_bid_till_now = max_bid_till_now
+        else:
+            # otherwise
+            max_bid_till_now = i.starting_bid
         max_bids.append(max_bid_till_now)
 
     return render(request, "auctions/index.html", {
@@ -123,8 +128,8 @@ def categories(request):
         max_bids = []
         for i in category_list:
             listing = auction_listing.objects.filter(id=i.id).get()
-            max_bid_till_now = int(bid.objects.filter(for_which_listing=listing).aggregate(
-                        models.Max('bid_amount'))['bid_amount__max'])
+            max_bid_till_now = bid.objects.filter(for_which_listing=listing).aggregate(
+                        models.Max('bid_amount'))['bid_amount__max']
             max_bids.append(max_bid_till_now)
 
         # returning to the category page showing all the listings
@@ -337,7 +342,7 @@ def add_bid(request):
         comments = comment.objects.filter(
                 for_which_listing=listing_obj).order_by('-when_added')
 
-        # gettting the max bid until now on that listing
+        # getting the max bid until now on that listing
         max_bid = bid.objects.filter(for_which_listing=listing_obj).aggregate(
             models.Max('bid_amount'))['bid_amount__max']
 

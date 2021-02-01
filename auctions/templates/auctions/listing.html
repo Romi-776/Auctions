@@ -31,26 +31,7 @@
 {% endif %}
 
 <!-- Displaying the details of the listing -->
-<div class="text-center">
-    <h2>{{listing.title}}</h2>
-</div>
-
-<!-- Watchlist button -->
-{% if listing not in request.user.watchlist.all %}
-<form action="watchlist" method="POST">
-    {% csrf_token %}
-    <div class="text-left">
-        <button name="listing" class="btn-primary btn" value="{{listing.id}}">Add to watchlist</button>
-    </div>
-</form>
-{% elif listing in request.user.watchlist.all %}
-<form action="remove" method="POST">
-    {% csrf_token %}
-    <div class="text-left">
-        <button name="listing" class="btn btn-primary" value="{{listing.id}}">Remove from watchlist</button>
-    </div>
-</form>
-{% endif %}
+<h2><b>Listing: </b> {{listing.title}}</h2>
 
 <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
@@ -74,6 +55,40 @@
                     <b>Category:</b> {{listing.category}} <br>
                     <b>Created When:</b> {{listing.added_when}} <br>
                     <b>Created By:</b> {{listing.created_by}} <br>
+
+                    <!-- Watchlist button -->
+                    {% if listing not in request.user.watchlist.all %}
+                    <form action="watchlist" method="POST">
+                        {% csrf_token %}
+                        <div class="text-left" style="margin: 10px;margin-left: 0;">
+                            <button name="listing" class="btn-secondary btn" value="{{listing.id}}">Add to
+                                watchlist</button>
+                        </div>
+                    </form>
+                    {% elif listing in request.user.watchlist.all %}
+                    <form action="remove" method="POST">
+                        {% csrf_token %}
+                        <div class="text-left" style="margin: 10px;margin-left: 0;">
+                            <button name="listing" class="btn btn-secondary" value="{{listing.id}}">Remove from
+                                watchlist</button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+                    <!-- End listing button -->
+                    {% if request.user.username == listing.created_by and listing.active %}
+                    <!-- End listing button -->
+                    <form action="{{listing.id}}" method="POST">
+                        {% csrf_token %}
+                        <input name="max_bid_till_now" value="{{max_bid_till_now}}" hidden>
+                        <input name="MaxBidderName" value="{{max_bidder}}" hidden>
+                        <div class="text-left" style="margin: 10px;margin-left: 0;">
+                            <button name="end_listing" class="btn btn-danger">End Listing</button>
+                        </div>
+                    </form>
+                    {% endif %}
+
+
                 </div>
             </div>
         </div>
@@ -161,17 +176,5 @@
         </div>
     </div>
 </div>
-
-
-<!-------------------------------------------------------------------------------->
-{% if request.user.username == listing.created_by and listing.active %}
-<!-- End listing button -->
-<form action="{{listing.id}}" method="POST">
-    {% csrf_token %}
-    <input name="max_bid_till_now" value="{{max_bid_till_now}}" hidden>
-    <input name="MaxBidderName" value="{{max_bidder}}" hidden>
-    <input type="submit" value="End Listing">
-</form>
-{% endif %}
 
 {% endblock %}
