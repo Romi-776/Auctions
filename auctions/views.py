@@ -321,7 +321,6 @@ def remove(request):
             "comments": comment.objects.filter(for_which_listing=listing_obj).order_by('-when_added')
         })
 
-
 # when someone clicks on add comment button
 def add_comment(request):
     if request.method == "POST":
@@ -330,6 +329,13 @@ def add_comment(request):
         commented_listing_id = request.POST["listing"]
         commented_listing_obj = auction_listing.objects.get(
             id=commented_listing_id)
+            
+        if comment_des == "":
+            return render(request, "auctions/listing.html", {
+            "listing": commented_listing_obj,
+            "error_message": "Empty comment cannot be added!",
+            "comments": comment.objects.filter(for_which_listing=commented_listing_obj).order_by('-when_added')
+        })
 
         # then create a new column for that written comment in database
         new_comment = comment(
