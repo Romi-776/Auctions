@@ -90,10 +90,26 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
+
+        if username == "":
+            return render(request, "auctions/register.html", {
+                "message": "Enter your Username."
+            })
+        elif email == "":
+            return render(request, "auctions/register.html", {
+                "message": "Enter your Email ID."
+            })
+        elif password == "":
+            return render(request, "auctions/register.html", {
+                "message": "Enter your Password."
+            })
+        elif confirmation == "":
+            return render(request, "auctions/register.html", {
+                "message": "Enter Password Confirmation."
+            })
+        
         if password != confirmation:
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."

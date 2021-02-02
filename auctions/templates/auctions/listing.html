@@ -31,7 +31,7 @@
 {% endif %}
 
 <!-- Displaying the details of the listing -->
-<h2><b>Listing: </b> {{listing.title}}</h2>
+<h3><b>Listing: </b> {{listing.title}}</h3>
 
 <div class="row">
     <div class="col-lg-4 col-md-6 col-sm-12">
@@ -99,82 +99,86 @@
 <!-- Biding part --->
 
 <div class="row" style="margin-top: 20px;">
+    {% if user.is_authenticated %}
     <div class="col-lg-4 col-md-6 col-sm-12">
-        <div class="card" style="height: 180px;">
-            <div class="card-header text-center">
-                <strong>BIDING SECTION</strong>
+        {% else %}
+        <div class="col-lg-8" style="margin-left: auto; margin-right: auto;">
+            {% endif %}
+            <div class="card" style="height: 180px;">
+                <div class="card-header text-center">
+                    <h5> <b>BIDING SECTION</b> </h5> 
+                </div>
+                <div class="card-body">
+                    <b>Max Bid Till Now: </b> Rs.{{max_bid_till_now}} made by <i>@{{max_bidder}}</i>
+
+                    {% if user.is_authenticated and listing.active %}
+                    <form action="add_bid" method="POST">
+                        {% csrf_token %}
+
+                        <div class="form-group col row" style="margin-top: 5px;">
+                            <label for="inputBId" class="col-sm-2 col-form-label">Bid:</label>
+                            <div class="col-sm-10 text-center">
+                                <input type="number" class="form-control" id="inputBid" name="amount"
+                                    placeholder="Add Your Bid Amount Here">
+                                <button name="listing" style="margin-top: 10px;" class="btn btn-primary"
+                                    value="{{listing.id}}">My Bid</button>
+                            </div>
+                        </div><br>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
-            <div class="card-body">
-                <b>Max Bid Till Now: </b> Rs.{{max_bid_till_now}} made by <i>@{{max_bidder}}</i>
+        </div>
 
-                {% if user.is_authenticated and listing.active %}
-                <form action="add_bid" method="POST">
-                    {% csrf_token %}
+        {% if user.is_authenticated %}
+        <div class="col-lg-8 col-md-6 col-sm-12">
+            <div class="card" style="height: 180px;">
+                <div class="card-header text-center">
+                    <h5> <b>COMMENT SECTION</b> </h5>
+                </div>
+                <div class="card-body" style="line-height: 75px;">
+                    <!-- Comments -->
+                    <form action="add_comment" method="POST">
+                        {% csrf_token %}
 
-                    <div class="form-group col row" style="margin-top: 5px;">
-                        <label for="inputBId" class="col-sm-2 col-form-label">Bid:</label>
-                        <div class="col-sm-10 text-center">
-                            <input type="number" class="form-control" id="inputBid" name="amount"
-                                placeholder="Add Your Bid Amount Here">
-                            <button name="listing" style="margin-top: 10px;" class="btn btn-primary"
-                                value="{{listing.id}}">My Bid</button>
-                        </div>
-                    </div><br>
-                </form>
-                {% endif %}
+                        <div class="form-group col row" style="margin-top: 15px;">
+                            <label for="inputComment" class="col-sm-2 col-form-label">Comment:</label>
+                            <div class="col-sm-10 text-center">
+                                <input type="text" class="form-control" id="inputComment" name="comment"
+                                    placeholder="New Comment">
+                                <button name="listing" style="margin-top: 1px;" class="btn btn-primary"
+                                    value="{{listing.id}}">Add Comment</button>
+                            </div>
+                        </div><br>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-lg-8" style="margin-left: auto; margin-right: auto;">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h5> <b>ALL COMMENTS</b> </h5>
+                </div>
+                <div class="card-body">
+                    {% for comment in comments %}
+                    <h4 class="text-center"> <b>{{comment.who_added.username}}</b>
+                        <span style="font-size: 15px;" class="text-muted">(on {{comment.when_added}}) </span>
+                    </h4>
+
+                    <p class="text-center">
+                        {{comment.description}}
+                    </p>
+                    {% empty %}
+                    <p class="text-center">No Comment Yet :(</p>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-lg-8 col-md-6 col-sm-12">
-        <div class="card" style="height: 180px;">
-            <div class="card-header text-center">
-                <strong>COMMENT SECTION</strong>
-            </div>
-            <div class="card-body" style="line-height: 75px;">
-                <!-- Comments -->
-                {% if user.is_authenticated %}
-                <form action="add_comment" method="POST">
-                    {% csrf_token %}
-
-                    <div class="form-group col row" style="margin-top: 15px;">
-                        <label for="inputComment" class="col-sm-2 col-form-label">Comment:</label>
-                        <div class="col-sm-10 text-center">
-                            <input type="text" class="form-control" id="inputComment" name="comment"
-                                placeholder="New Comment">
-                            <button name="listing" style="margin-top: 1px;" class="btn btn-primary"
-                                value="{{listing.id}}">Add Comment</button>
-                        </div>
-                    </div><br>
-                </form>
-                {% endif %}
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row" style="margin-top: 20px;">
-    <div class="col-lg-8" style="margin-left: auto; margin-right: auto;">
-        <div class="card">
-            <div class="card-header text-center">
-                <strong>ALL COMMENTS</strong>
-            </div>
-            <div class="card-body">
-                {% for comment in comments %}
-                <h4 class="text-center"> <b>{{comment.who_added.username}}</b>
-                    <span style="font-size: 15px;" class="text-muted">(on {{comment.when_added}}) </span>
-                </h4>
-
-                <p class="text-center">
-                    {{comment.description}}
-                </p>
-                {% empty %}
-                <p class="text-center">No Comment Yet :(</p>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>
-
-{% endblock %}
+    {% endblock %}

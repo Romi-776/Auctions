@@ -1,30 +1,37 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% if message %}
+<div class="alert alert-danger text-center">
+    <div>{{ message }}</div>
+</div>
+{% endif %}
 
-    <h2>Register</h2>
+<h2 class="text-center text-muted" style="margin-top: 3%;">Register</h2>
 
-    {% if message %}
-        <div>{{ message }}</div>
-    {% endif %}
+<form action="{% url 'register' %}" class="text-center" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <input class="form-control col-lg-8" style="margin-left: auto;margin-right: auto; margin-top: 20px;" autofocus
+            type="text" name="username" placeholder="Username">
+    </div>
+    <div class="form-group">
+        <input class="form-control col-lg-8" style="margin-left: auto;margin-right: auto;" type="email" name="email"
+            placeholder="Email Address">
+    </div>
+    <div class="form-group">
+        <input class="form-control col-lg-8" style="margin-left: auto;margin-right: auto;" type="password"
+            name="password" placeholder="Password">
+    </div>
+    <div class="form-group">
+        <input class="form-control col-lg-8" style="margin-left: auto;margin-right: auto;" type="password"
+            name="confirmation" placeholder="Confirm Password">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+</form>
 
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        <div class="form-group">
-            <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="email" name="email" placeholder="Email Address">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-
+<div class="text-center" style="margin-top: 20px;">
     Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+</div>
 
 {% endblock %}
