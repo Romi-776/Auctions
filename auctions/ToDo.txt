@@ -1,3 +1,0 @@
-Completed all the requirements.
-
-Update the Navbar and colors on the site.
