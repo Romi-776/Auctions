@@ -1,8 +1,13 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+{% if error_message %}
+<div class="alert alert-danger" role="alert">
+    <strong>Error! </strong> {{error_message}}.
+</div>
+{% endif %}
 <!--Title of the page -->
-<center>
+<div class="text-center">
     <h2 class="text-muted">Enter Product Details</h2>
 
     <form action="{% url 'create_listing' %}" , method="POST">
@@ -56,6 +61,6 @@
         <button type="submit" class="btn btn-primary">Submit</button>
 
     </form>
-</center>
+</div>
 
 {% endblock %}

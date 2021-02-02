@@ -43,8 +43,30 @@ def create_listing(request):
         Des = request.POST["description"]
         url = request.POST["image_url"]
         category = request.POST["category"]
-        starting_bid = int(request.POST["starting_bid"])
+        starting_bid = request.POST["starting_bid"]
 
+        if Title == "":
+            return render(request, "auctions/create.html", {
+            "categories": categories_types,
+            "error_message": "Enter the Title of the product!",
+        })
+        elif Des == "":
+            return render(request, "auctions/create.html", {
+            "categories": categories_types,
+            "error_message": "Enter the Description of the product!",
+        })
+        elif url == "":
+            return render(request, "auctions/create.html", {
+            "categories": categories_types,
+            "error_message": "Enter the URL of the product!",
+        })
+        elif starting_bid == "":
+            return render(request, "auctions/create.html", {
+            "categories": categories_types,
+            "error_message": "Enter the Starting Bid of the product!",
+        })
+        starting_bid = int(starting_bid)
+        
         listing = auction_listing(
             title=Title, description=Des, image_url=url, category=category, created_by=request.user.username, starting_bid=starting_bid)
 
