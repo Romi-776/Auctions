@@ -33,6 +33,7 @@ logging in.
 
 ### Register
 New user can unlock more features of this project by creating an account in this.
+
 ![Register](img/Register.JPG)
 
 ### Login 
