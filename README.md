@@ -8,7 +8,7 @@ The user with the highest bid on a listing will win that listing.
 
 ### Homepage (Active Listings)
 User can see all the active listings that are available right now.
-
+![Homepage](img/Homepage.JPG)
 
 ### Specific Listing
 When a user clicks on any specific listing then a new page will be opened which
