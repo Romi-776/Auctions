@@ -1,5 +1,5 @@
 # Auctions
-It is an eBay like E-Commerce auctions site. It will allow users to post their auction listings, 
+It is an eBay like E-Commerce auctions site (mobile responsive). It will allow users to post their auction listings, 
 place bids on listings, comment on those listings, and add listings to a “watchlist.” 
 The user with the highest bid on a listing will win that listing. 
 (All these after creating an account and then logging in it.)
